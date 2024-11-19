@@ -8,10 +8,22 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <div id="branding">
-      <img src="/images/RTfkt-logo2.webp" alt="RTFKT Logo" class="logo" />
-      <h1>RTFKT Sneaker Showcase</h1>
-    </div>
+    <div id="configurator">
+      <h2>Model Configurator</h2>
+      <div class="config-item">
+        <label for="scale">Scale:</label>
+        <input type="range" id="scale" min="0.1" max="2" step="0.1" value="1">
+      </div>
+      <div class="config-item">
+        <label for="rotation">Rotation:</label>
+        <input type="range" id="rotation" min="0" max="360" step="1" value="0">
+      </div>
+      <div class="config-item">
+        <label for="color">Color:</label>
+        <input type="color" id="color" value="#ffffff">
+      </div>
+      <button id="reset">Reset Configurations</button>
+    </div>    
     <script type="module" src="/main.js"></script>
   </body>
 </html>

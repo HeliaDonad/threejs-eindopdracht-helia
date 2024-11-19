@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'dat.gui';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -28,6 +29,15 @@ rgbeLoader.load('/envmap/environment.hdr', (texture) => {
     scene.background = texture;
 });
 
+// Add floor for shadows
+const floorGeometry = new THREE.PlaneGeometry(10, 10);
+const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.8 });
+const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -1;
+floor.receiveShadow = true;
+scene.add(floor);
+
 // Load 3D model
 const loader = new GLTFLoader();
 loader.load('/models/sneaker/scene.gltf', (gltf) => {
@@ -41,6 +51,13 @@ loader.load('/models/sneaker/scene.gltf', (gltf) => {
         }
     });
     scene.add(model);
+
+    // Add dat.GUI controls for the model
+    const modelFolder = gui.addFolder('Model Position');
+    modelFolder.add(model.position, 'x', -5, 5).name('X Position');
+    modelFolder.add(model.position, 'y', -5, 5).name('Y Position');
+    modelFolder.add(model.position, 'z', -5, 5).name('Z Position');
+    modelFolder.open();
 });
 
 // Add lighting
@@ -53,6 +70,22 @@ directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.width = 1024;
 directionalLight.shadow.mapSize.height = 1024;
 scene.add(directionalLight);
+
+// Add dat.GUI for lighting
+const gui = new dat.GUI();
+
+const lightFolder = gui.addFolder('Directional Light');
+lightFolder.add(directionalLight.position, 'x', -10, 10).name('X Position');
+lightFolder.add(directionalLight.position, 'y', 0, 20).name('Y Position');
+lightFolder.add(directionalLight.position, 'z', -10, 10).name('Z Position');
+lightFolder.add(directionalLight, 'intensity', 0, 2).name('Intensity');
+lightFolder.open();
+
+const ambientLightFolder = gui.addFolder('Ambient Light');
+ambientLightFolder.addColor({ color: ambientLight.color.getHex() }, 'color')
+    .onChange((value) => ambientLight.color.set(value))
+    .name('Color');
+ambientLightFolder.open();
 
 // Camera position
 camera.position.set(0, 1, 5);

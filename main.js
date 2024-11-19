@@ -20,6 +20,13 @@ controls.dampingFactor = 0.05;
 controls.minDistance = 2; // Limit how close the camera can get
 controls.maxDistance = 10; // Limit how far the camera can move
 
+// Load environment map
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load('/envmap/environment.hdr', (texture) => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.background = texture;
+});
 
 // Load 3D model
 const loader = new GLTFLoader();

@@ -16,10 +16,10 @@ document.body.appendChild(renderer.domElement);
 
 // Add OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // Smooth movement
+controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-controls.minDistance = 2; // Limit how close the camera can get
-controls.maxDistance = 10; // Limit how far the camera can move
+controls.minDistance = 2;
+controls.maxDistance = 10;
 
 // Load environment map
 const rgbeLoader = new RGBELoader();
@@ -29,9 +29,16 @@ rgbeLoader.load('/envmap/environment.hdr', (texture) => {
     scene.background = texture;
 });
 
-// Add floor for shadows
-const floorGeometry = new THREE.PlaneGeometry(10, 10);
-const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.8 });
+// Add floor with logo texture
+const textureLoader = new THREE.TextureLoader();
+const logoTexture = textureLoader.load('/images/RTfkt-logo2.webp');
+
+const floorGeometry = new THREE.PlaneGeometry(15, 15);
+const floorMaterial = new THREE.MeshStandardMaterial({
+    map: logoTexture,
+    roughness: 0.7,
+    metalness: 0.3,
+});
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = -1;
@@ -61,7 +68,7 @@ loader.load('/models/sneaker/scene.gltf', (gltf) => {
 });
 
 // Add lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Soft ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); // Soft ambient light
 scene.add(ambientLight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -88,7 +95,7 @@ ambientLightFolder.addColor({ color: ambientLight.color.getHex() }, 'color')
 ambientLightFolder.open();
 
 // Camera position
-camera.position.set(0, 1, 5);
+camera.position.set(0, 2, 7);
 
 // Animation loop
 function animate() {
